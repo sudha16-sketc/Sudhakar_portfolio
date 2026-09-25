@@ -1,5 +1,5 @@
 import "../styles/global.css";
-import { FaGithub, FaLinkedin, FaEnvelope } from "react-icons/fa";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function Contact() {
@@ -16,44 +16,59 @@ function Contact() {
       </div>
 
       <div className="contact-buttons">
-<Link to="/contactinput" className="contact-btn">
-  Contact Me
-</Link>
+        <Link to="/contactinput" className="contact-btn">
+          Contact Me
+        </Link>
         <a href="/Resume.pdf" download>
           Download Resume
         </a>
       </div>
 
-<div className="social-links">
-  <a href="https://github.com/sudha16-sketc">
-    <FaGithub />
-    <span>GitHub</span>
-  </a>
+      <div className="social-links">
+        <a
+          href="https://github.com/sudha16-sketc"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FaGithub />
+          <span>GitHub</span>
+        </a>
 
-  <a href="https://www.linkedin.com/in/sudhakar-sutar-801354321?utm_source=share_via&utm_content=profile&utm_medium=member_android">
-    <FaLinkedin />
-    <span>LinkedIn</span>
-  </a>
-
-
-</div>
+        <a
+          href="https://www.linkedin.com/in/sudhakar-sutar-801354321?utm_source=share_via&utm_content=profile&utm_medium=member_android"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <FaLinkedin />
+          <span>LinkedIn</span>
+        </a>
+      </div>
 
       <img
         src="/img/contact-1.webp"
-        alt="Decoration 1"
+        alt=""
+        aria-hidden="true"
         className="img1"
+        loading="lazy"
+        decoding="async"
       />
 
       <img
         src="/img/contact-2.webp"
-        alt="Decoration 2"
+        alt=""
+        aria-hidden="true"
         className="img2"
+        loading="lazy"
+        decoding="async"
       />
 
       <img
         src="/img/swordman.webp"
-        alt="Decoration 3"
+        alt=""
+        aria-hidden="true"
         className="img3"
+        loading="lazy"
+        decoding="async"
       />
     </section>
   );

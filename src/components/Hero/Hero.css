@@ -29,7 +29,11 @@
   align-items: center;
   justify-content: space-between;
   padding: 28px 48px;
-  background: rgba(160, 7, 6, 0.92);
+  background: linear-gradient(
+    180deg,
+    rgba(178, 7, 6, 0.96),
+    rgba(132, 6, 5, 0.9)
+  );
   backdrop-filter: blur(18px);
   -webkit-backdrop-filter: blur(18px);
   border-bottom: 1px solid rgba(255, 255, 255, 0.14);
@@ -116,7 +120,56 @@
 }
 
 .nav-pill-item:focus-visible {
-  box-shadow: 0 0 0 2px #ffffff;
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(160, 7, 6, 0.6);
+}
+
+/* ─── Mobile hamburger toggle ─────────────────────────────────────── */
+.nav-toggle {
+  display: none;
+  position: relative;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  margin: 0;
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  border-radius: 50%;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 5px;
+  box-shadow: none;
+}
+
+.nav-toggle:hover {
+  transform: none;
+  background: rgba(255, 255, 255, 0.16);
+  box-shadow: none;
+}
+
+.nav-toggle:focus-visible {
+  box-shadow: 0 0 0 2px #ffffff, 0 0 0 4px rgba(160, 7, 6, 0.6);
+}
+
+.nav-toggle-bar {
+  display: block;
+  width: 18px;
+  height: 2px;
+  border-radius: 2px;
+  background: #ffffff;
+  transition: transform 0.3s var(--ease-out), opacity 0.2s ease;
+}
+
+.nav-toggle.open .nav-toggle-bar:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.nav-toggle.open .nav-toggle-bar:nth-child(2) {
+  opacity: 0;
+}
+
+.nav-toggle.open .nav-toggle-bar:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ─── Status badge ────────────────────────────────────────────────── */
@@ -312,19 +365,99 @@
 /* ─── Responsive ──────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
   .hero-header {
-    padding: 24px 32px;
+    padding: 20px 24px;
   }
 
   .hero-header-spacer {
-    height: 88px;
+    height: 84px;
   }
 
   .hero-header-badge {
     display: none;
   }
 
+  .nav-toggle {
+    display: inline-flex;
+  }
+
+  /* Pill becomes a slide-down drawer on tablets & phones */
+  .nav-pill {
+    position: fixed;
+    top: 84px;
+    left: 16px;
+    right: 16px;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 4px;
+    padding: 12px;
+    background: rgba(178, 7, 6, 0.97);
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    border-radius: 22px;
+    box-shadow: 0 30px 70px rgba(23, 8, 8, 0.35);
+    transform: translateY(-16px) scale(0.98);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out),
+      visibility 0s linear 0.35s;
+    z-index: 999;
+  }
+
+  .nav-pill::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(24, 5, 5, 0.4);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
+    z-index: -1;
+  }
+
+  .nav-pill.open {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 0.35s var(--ease-out), transform 0.35s var(--ease-out);
+  }
+
+  .nav-pill.open .nav-pill-item {
+    opacity: 0;
+    transform: translateX(18px);
+    animation: navItemIn 0.4s var(--ease-out) forwards;
+  }
+
+  .nav-pill.open .nav-pill-item:nth-child(1) { animation-delay: 0.04s; }
+  .nav-pill.open .nav-pill-item:nth-child(2) { animation-delay: 0.08s; }
+  .nav-pill.open .nav-pill-item:nth-child(3) { animation-delay: 0.12s; }
+  .nav-pill.open .nav-pill-item:nth-child(4) { animation-delay: 0.16s; }
+  .nav-pill.open .nav-pill-item:nth-child(5) { animation-delay: 0.2s; }
+
+  .nav-pill-item {
+    text-align: center;
+    padding: 14px;
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    border-radius: 14px;
+  }
+
+  .nav-pill-item:hover {
+    background: rgba(255, 255, 255, 0.14);
+  }
+
   .hero-content {
-    padding: 40px 32px 28px;
+    padding: 40px 24px 28px;
+  }
+}
+
+@keyframes navItemIn {
+  from {
+    opacity: 0;
+    transform: translateX(18px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
   }
 }
 
@@ -348,26 +481,25 @@
 
 @media (max-width: 640px) {
   .hero-header {
-    padding: 18px 18px;
+    padding: 14px 16px;
   }
 
   .hero-header-spacer {
-    height: 72px;
+    height: 68px;
+  }
+
+  .nav-pill {
+    top: 68px;
   }
 
   .brand-tag {
     display: none;
   }
 
-  .nav-pill {
-    padding: 3px 5px;
-    gap: 3px;
-  }
-
   .nav-pill-item {
-    padding: 6px 12px;
-    font-size: 0.7rem;
-    letter-spacing: 0.05em;
+    padding: 13px;
+    font-size: 0.82rem;
+    letter-spacing: 0.08em;
   }
 
   .hero-content {

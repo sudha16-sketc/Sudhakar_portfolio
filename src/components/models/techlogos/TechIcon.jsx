@@ -19,7 +19,7 @@ const   TechIcon = ({model}) => {
                 }
             })
         }
-    }, [scene]);
+    }, [scene, model.name]);
     return (
      <Canvas>
          <ambientLight intensity={0.3}/>

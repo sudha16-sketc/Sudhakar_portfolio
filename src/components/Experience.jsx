@@ -11,55 +11,57 @@ function Experience() {
   const lineRef = useRef(null);
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Section title
-      gsap.from(titleRef.current, {
-        y: 80,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: titleRef.current,
-          start: window.innerWidth <=768
-        ? "top 95%"
-        : "top 80%",
-        },
-      });
+    const mm = gsap.matchMedia();
 
-      // Timeline items
-      itemsRef.current.forEach((item, index) => {
-        gsap.from(item, {
+    mm.add(
+      "(prefers-reduced-motion: no-preference)",
+      () => {
+        // Section title
+        gsap.from(titleRef.current, {
+          y: 80,
           opacity: 0,
-          x: window.innerWidth > 768 ? (index % 2 === 0 ? -100 : 100) : 0,
-
-          y: window.innerWidth <= 768 ? 60 : 0,
           duration: 1,
           ease: "power3.out",
           scrollTrigger: {
-            trigger: item,
-            start: window.innerWidth <=768
-        ? "top 95%"
-        : "top 80%",
-            toggleActions: "play none none reverse",
+            trigger: titleRef.current,
+            start:
+              window.innerWidth <= 768 ? "top 95%" : "top 80%",
           },
         });
-      });
 
-      gsap.to(lineRef.current, {
-        scaleY: 1,
-        ease: "none",
-        scrollTrigger: {
-          trigger: ".timeline",
-          start: window.innerWidth <=768
-        ? "top 95%"
-        : "top 80%",
-          end: "bottom 80%",
-          scrub: true,
-        },
-      });
-    });
+        // Timeline items
+        itemsRef.current.forEach((item, index) => {
+          gsap.from(item, {
+            opacity: 0,
+            x:
+              window.innerWidth > 768 ? (index % 2 === 0 ? -60 : 60) : 0,
+            y: window.innerWidth <= 768 ? 60 : 0,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: item,
+              start:
+                window.innerWidth <= 768 ? "top 95%" : "top 80%",
+              toggleActions: "play none none reverse",
+            },
+          });
+        });
 
-    return () => ctx.revert();
+        gsap.to(lineRef.current, {
+          scaleY: 1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: ".timeline",
+            start:
+              window.innerWidth <= 768 ? "top 95%" : "top 80%",
+            end: "bottom 80%",
+            scrub: true,
+          },
+        });
+      }
+    );
+
+    return () => mm.revert();
   }, []);
 
   return (

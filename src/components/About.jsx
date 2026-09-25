@@ -8,65 +8,63 @@ gsap.registerPlugin(ScrollTrigger);
 function About() {
   const blurRef = useRef(null);
   const imageRef = useRef(null);
+
   useEffect(() => {
-  const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
 
-    gsap.fromTo(
-      blurRef.current,
-      {
-        opacity: 0,
-        filter: "blur(40px)",
-        y: 50,
-      },
-      {
-        opacity: 1,
-        filter: "blur(0px)",
-        y: 0,
-        scrollTrigger: {
-          trigger: blurRef.current,
-          start: "top 80%",
-          end: "top 30%",
-          scrub: true,
+    // Elegant reveals — skipped entirely when reduced motion is requested
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
+      gsap.fromTo(
+        blurRef.current,
+        {
+          opacity: 0,
+          filter: "blur(40px)",
+          y: 50,
         },
-      }
-    );
+        {
+          opacity: 1,
+          filter: "blur(0px)",
+          y: 0,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: blurRef.current,
+            start: "top 85%",
+            end: "top 35%",
+            scrub: true,
+          },
+        }
+      );
 
-    gsap.fromTo(
-      imageRef.current,
-      {
-        width: 360,
-        height: 510,
-        borderRadius: 50,
-      },
-      {
-        width: "100wh",
-        height: "100vh",
-        borderRadius: 0,
-        ease: "power1.inOut",
-        scrollTrigger: {
-          trigger: imageRef.current,
-             start:"top 80%",
-            end:"+=1000",
-          scrub: true,
-        },
-      }
-    );
+      gsap.fromTo(
+        imageRef.current,
+        { scale: 0.9, y: 40, opacity: 0 },
+        {
+          scale: 1,
+          y: 0,
+          opacity: 1,
+          duration: 1.1,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: imageRef.current,
+            start: "top 85%",
+          },
+        }
+      );
+    });
 
-  });
+    return () => mm.revert();
+  }, []);
 
-  return () => ctx.revert();
-
-}, []);
   return (
-    <section className="about-section " id="about" >
+    <section className="about-section" id="about">
       <p>About Me</p>
 
-      <div  ref={blurRef} className="autoBlur">
+      <div ref={blurRef} className="autoBlur">
         <h1>BUILDING THE FUTURE WITH CODE</h1>
       </div>
 
       <div ref={imageRef} className="image-box">
-        <img src="/img/about.webp" alt="About Me" />
+        <img src="/img/about.webp" alt="Portrait of Sudhakar Sutar" decoding="async" />
       </div>
 
       <h4>

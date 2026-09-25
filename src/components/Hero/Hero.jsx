@@ -3,25 +3,72 @@ import { CharacterTracker } from './CharacterTracker.jsx';
 import { ArrowUpRight, Sparkles, Mail } from 'lucide-react';
 import './Hero.css';
 
+const navItems = [
+  { label: 'WORK', target: 'projects' },
+  { label: 'ABOUT', target: 'about' },
+  { label: 'CONTACT', target: 'contact' },
+  { label: 'EXPERIENCE', target: 'experience' },
+  { label: 'TECH STACK', target: 'skills' },
+];
+
 export const Hero = () => {
   const [activeNav, setActiveNav] = useState('');
-
-  const navItems = [
-    { label: 'WORK', target: 'projects' },
-    { label: 'ABOUT', target: 'about' },
-    { label: 'CONTACT', target: 'contact' },
-    { label: 'EXPERIENCE', target: 'experience' },
-    { label: 'TECH STACK', target: 'skills' },
-  ];
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleNavClick = (e, target) => {
     e.preventDefault();
+    if (menuOpen) {
+      setMenuOpen(false);
+      // Return focus to the toggle after the drawer closes
+      if (window.matchMedia('(max-width: 1024px)').matches) {
+        document.querySelector('.nav-toggle')?.focus();
+      }
+    }
     const el = document.getElementById(target);
     if (el) {
       const y = el.getBoundingClientRect().top + window.scrollY - 96;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
   };
+
+  // Lock body scroll while the mobile menu is open + close on Escape
+  useEffect(() => {
+    if (!menuOpen) return;
+    const nav = document.getElementById('primary-nav');
+    document.body.style.overflow = 'hidden';
+
+    const onKey = (e) => {
+      if (e.key === 'Escape') {
+        setMenuOpen(false);
+        document.querySelector('.nav-toggle')?.focus();
+        return;
+      }
+      if (e.key === 'Tab' && nav) {
+        const focusables = Array.from(
+          nav.querySelectorAll('a[href], button:not([disabled])')
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0];
+        const last = focusables[focusables.length - 1];
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
+    };
+
+    window.addEventListener('keydown', onKey);
+    // Move focus into the drawer on open
+    nav?.querySelector('a[href]')?.focus();
+
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKey);
+    };
+  }, [menuOpen]);
 
   useEffect(() => {
     const onScroll = () => {
@@ -56,18 +103,36 @@ export const Hero = () => {
           <span className="brand-tag">DEV &bull; 2026</span>
         </div>
 
-        <nav className="nav-pill" aria-label="Primary Navigation">
+        <nav
+          id="primary-nav"
+          className={`nav-pill ${menuOpen ? 'open' : ''}`}
+          aria-label="Primary Navigation"
+        >
           {navItems.map((item) => (
             <a
               key={item.label}
               href={`#${item.target}`}
               className={`nav-pill-item ${activeNav === item.label ? 'active' : ''}`}
+              aria-current={activeNav === item.label ? 'true' : undefined}
               onClick={(e) => handleNavClick(e, item.target)}
             >
               {item.label}
             </a>
           ))}
         </nav>
+
+        <button
+          type="button"
+          className={`nav-toggle ${menuOpen ? 'open' : ''}`}
+          aria-expanded={menuOpen}
+          aria-controls="primary-nav"
+          aria-label={menuOpen ? 'Close menu' : 'Open menu'}
+          onClick={() => setMenuOpen((v) => !v)}
+        >
+          <span className="nav-toggle-bar" />
+          <span className="nav-toggle-bar" />
+          <span className="nav-toggle-bar" />
+        </button>
 
         <div className="hero-header-badge">
           <Sparkles className="badge-icon" size={13} />
@@ -93,7 +158,7 @@ export const Hero = () => {
 
           <div className="hero-cta-group">
             <a
-              href="#resume"
+              href="/Resume.pdf"
               className="hero-btn hero-btn-primary"
               aria-label="View Resume"
             >
@@ -105,6 +170,7 @@ export const Hero = () => {
               href="#contact"
               className="hero-btn hero-btn-secondary"
               aria-label="Contact Sudhakar"
+              onClick={(e) => handleNavClick(e, 'contact')}
             >
               <Mail className="btn-icon" size={15} />
               <span>Let's Talk</span>

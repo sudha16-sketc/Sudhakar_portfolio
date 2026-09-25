@@ -52,7 +52,9 @@ function Skills() {
   ];
 
   useEffect(() => {
-    const ctx = gsap.context(() => {
+    const mm = gsap.matchMedia();
+
+    mm.add("(prefers-reduced-motion: no-preference)", () => {
       gsap.from(titleRef.current, {
         opacity: 0,
         y: 70,
@@ -81,11 +83,12 @@ function Skills() {
       });
     });
 
-    return () => ctx.revert();
+    return () => mm.revert();
   }, []);
 
   useGSAP(
     () => {
+      if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
       const cards = sectionRef.current.querySelectorAll(".skill-card");
       gsap.fromTo(
         cards,
@@ -101,10 +104,13 @@ function Skills() {
             start: window.innerWidth <= 768 ? "top 90%" : "top center",
             toggleActions: "play none none reset",
           },
-        },
+        }
       );
     },
-    { scope: sectionRef },
+    {
+      scope: sectionRef,
+      dependencies: [],
+    }
   );
 
   return (

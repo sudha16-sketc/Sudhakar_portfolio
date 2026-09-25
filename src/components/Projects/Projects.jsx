@@ -42,74 +42,75 @@ function Projects() {
         "AI-powered smart gardening assistant providing personalized plant care recommendations using Gemini AI and intelligent visual guides.",
       video: "/videos/plantcare.mp4",
     },
-   {
-  title: "See More",
-  description: "Click here to see more of my projects.",
-  video: "/videos/hero-1.mp4",
-  isSeeMore: true,
-}
+    {
+      title: "See More",
+      description: "Click here to see more of my projects.",
+      video: "/videos/hero-1.mp4",
+      isSeeMore: true,
+    },
   ];
 
   useEffect(() => {
     const mm = gsap.matchMedia();
 
-    mm.add("(min-width: 769px)", () => {
-
-        gsap.from(titleRef.current,{
-            opacity:0,
-            x:100,
-            duration:1,
-            scrollTrigger:{
-                trigger:titleRef.current,
-                start:"top 80%"
-            }
+    mm.add(
+      "(min-width: 769px) and (prefers-reduced-motion: no-preference)",
+      () => {
+        gsap.from(titleRef.current, {
+          opacity: 0,
+          x: 100,
+          duration: 1,
+          scrollTrigger: {
+            trigger: titleRef.current,
+            start: "top 80%",
+          },
         });
 
-        cardsRef.current.forEach(card=>{
-            gsap.from(card,{
-                opacity:0,
-                x:300,
-                duration:1,
-                ease:"power3.out",
-                scrollTrigger:{
-                    trigger:card,
-                    start:"top 70%"
-                }
-            });
+        cardsRef.current.forEach((card) => {
+          gsap.from(card, {
+            opacity: 0,
+            x: 60,
+            duration: 1,
+            ease: "power3.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 72%",
+            },
+          });
+        });
+      }
+    );
+
+    mm.add(
+      "(max-width: 768px) and (prefers-reduced-motion: no-preference)",
+      () => {
+        gsap.from(titleRef.current, {
+          opacity: 0,
+          y: 40,
+          duration: 0.6,
+          scrollTrigger: {
+            trigger: titleRef.current,
+            start: "top 95%",
+          },
         });
 
-    });
-
-    mm.add("(max-width:768px)",()=>{
-
-        gsap.from(titleRef.current,{
-            opacity:0,
-            y:40,
-            duration:.6,
-            scrollTrigger:{
-                trigger:titleRef.current,
-                start:"top 95%"
-            }
+        cardsRef.current.forEach((card) => {
+          gsap.from(card, {
+            opacity: 0,
+            y: 60,
+            duration: 0.7,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: card,
+              start: "top 95%",
+            },
+          });
         });
+      }
+    );
 
-        cardsRef.current.forEach(card=>{
-            gsap.from(card,{
-                opacity:0,
-                y:60,
-                duration:.7,
-                ease:"power2.out",
-                scrollTrigger:{
-                    trigger:card,
-                    start:"top 95%"
-                }
-            });
-        });
-
-    });
-
-    return ()=>mm.revert();
-
-},[]);
+    return () => mm.revert();
+  }, []);
 
   return (
     <section className="info-section" id="projects">
@@ -123,26 +124,33 @@ function Projects() {
       </p>
 
       <div className="projects-grid">
-{projects.map((project, index) => (
-  <div
-    key={index}
-    ref={(el) => (cardsRef.current[index] = el)}
-    onClick={() => {
-      if (project.isSeeMore) {
-        navigate("/allprojects");
-      }
-    }}
-    style={{
-      cursor: project.isSeeMore ? "pointer" : "default",
-    }}
-  >
-    <ProjectCard
-      title={project.title}
-      description={project.description}
-      video={project.video}
-    />
-  </div>
-))}
+        {projects.map((project, index) => (
+          <div
+            key={index}
+            className="project-card-wrap"
+            ref={(el) => (cardsRef.current[index] = el)}
+            role={project.isSeeMore ? "button" : undefined}
+            tabIndex={project.isSeeMore ? 0 : undefined}
+            onClick={() => {
+              if (project.isSeeMore) navigate("/allprojects");
+            }}
+            onKeyDown={(e) => {
+              if (
+                project.isSeeMore &&
+                (e.key === "Enter" || e.key === " ")
+              ) {
+                e.preventDefault();
+                navigate("/allprojects");
+              }
+            }}
+          >
+            <ProjectCard
+              title={project.title}
+              description={project.description}
+              video={project.video}
+            />
+          </div>
+        ))}
       </div>
     </section>
   );
