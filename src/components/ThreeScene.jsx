@@ -1,6 +1,6 @@
 import { Canvas } from "@react-three/fiber";
 import { Environment } from "@react-three/drei";
-import FloatingModel from "./FloatingModel";
+
 
  function ThreeScene() {
   return (
@@ -20,8 +20,6 @@ import FloatingModel from "./FloatingModel";
       <directionalLight position={[5, 5, 5]} intensity={2} />
 
       <Environment preset="city" />
-
-      <FloatingModel />
     </Canvas>
   );
 }
