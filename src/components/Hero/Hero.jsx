@@ -1,12 +1,44 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { CharacterTracker } from './CharacterTracker.jsx';
 import { ArrowUpRight, Sparkles, Mail } from 'lucide-react';
 import './Hero.css';
 
 export const Hero = () => {
-  const [activeNav, setActiveNav] = useState('WORK');
+  const [activeNav, setActiveNav] = useState('');
 
-  const navItems = ['WORK', 'ABOUT', 'CONTACT'];
+  const navItems = [
+    { label: 'WORK', target: 'projects' },
+    { label: 'ABOUT', target: 'about' },
+    { label: 'CONTACT', target: 'contact' },
+    { label: 'EXPERIENCE', target: 'experience' },
+    { label: 'TECH STACK', target: 'skills' },
+  ];
+
+  const handleNavClick = (e, target) => {
+    e.preventDefault();
+    const el = document.getElementById(target);
+    if (el) {
+      const y = el.getBoundingClientRect().top + window.scrollY - 96;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  };
+
+  useEffect(() => {
+    const onScroll = () => {
+      const offset = window.innerHeight * 0.4;
+      let current = '';
+      navItems.forEach((item) => {
+        const el = document.getElementById(item.target);
+        if (el && el.getBoundingClientRect().top <= offset) {
+          current = item.label;
+        }
+      });
+      setActiveNav(current);
+    };
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   return (
     <section className="hero-container" id="hero" aria-label="Hero Section">
@@ -16,7 +48,7 @@ export const Hero = () => {
         <CharacterTracker />
       </div>
 
-      {/* ── Floating Top Navigation (z-index: 20, above character) ────────── */}
+      {/* ── Fixed Top Navigation (the site navbar) ──────────────────────── */}
       <header className="hero-header">
         <div className="hero-brand" aria-label="Logo">
           <span className="brand-dot" />
@@ -26,14 +58,14 @@ export const Hero = () => {
 
         <nav className="nav-pill" aria-label="Primary Navigation">
           {navItems.map((item) => (
-            <button
-              key={item}
-              type="button"
-              className={`nav-pill-item ${activeNav === item ? 'active' : ''}`}
-              onClick={() => setActiveNav(item)}
+            <a
+              key={item.label}
+              href={`#${item.target}`}
+              className={`nav-pill-item ${activeNav === item.label ? 'active' : ''}`}
+              onClick={(e) => handleNavClick(e, item.target)}
             >
-              {item}
-            </button>
+              {item.label}
+            </a>
           ))}
         </nav>
 
@@ -42,6 +74,9 @@ export const Hero = () => {
           <span>AVAILABLE FOR PROJECTS</span>
         </div>
       </header>
+
+      {/* Keeps hero flex layout intact under the fixed navbar */}
+      <div className="hero-header-spacer" aria-hidden="true" />
 
       {/* ── Bottom Content Overlay (gradient + text + CTAs) ──────────────── */}
       <div className="hero-content">

@@ -17,15 +17,29 @@
   /* No horizontal padding — character fills full width */
 }
 
-/* ─── Floating Top Navigation ──────────────────────────────────────── */
+/* ─── Fixed Site Navbar (floats above every section) ────────────────── */
 .hero-header {
-  position: relative;
-  z-index: 20;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  box-sizing: border-box;
+  z-index: 1000;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 100%;
   padding: 28px 48px;
+  background: transparent;
+
+}
+
+.hero-header:hover {
+  box-shadow: none;
+}
+
+.hero-header-spacer {
+  height: 96px;
+  flex: none;
 }
 
 .hero-brand {
@@ -75,6 +89,7 @@
 .nav-pill-item {
   background: transparent;
   border: none;
+  text-decoration: none;
   color: rgba(255, 255, 255, 0.75);
   font-size: 0.78rem;
   font-weight: 600;
@@ -297,6 +312,10 @@
     padding: 24px 32px;
   }
 
+  .hero-header-spacer {
+    height: 88px;
+  }
+
   .hero-header-badge {
     display: none;
   }
@@ -311,6 +330,10 @@
     padding: 24px 28px;
   }
 
+  .hero-header-spacer {
+    height: 88px;
+  }
+
   .hero-content {
     padding: 32px 28px 24px;
   }
@@ -323,6 +346,10 @@
 @media (max-width: 640px) {
   .hero-header {
     padding: 18px 18px;
+  }
+
+  .hero-header-spacer {
+    height: 72px;
   }
 
   .brand-tag {

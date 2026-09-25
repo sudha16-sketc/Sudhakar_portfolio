@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Header from "./components/Header";
 import Hero from "./components/Hero";
 import About from "./components/About";
 import Projects from "./components/Projects/Projects";
@@ -38,7 +37,6 @@ function Home() {
   return (
     <>
       {!isMobile && <ThreeScene />}
-      <Header />
       <Hero />
       <About />
       <Certificate/>
