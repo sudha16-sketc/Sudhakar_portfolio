@@ -97,14 +97,14 @@ export class CharacterTrackerEngine {
 
     // Center / neutral frame
     const centerImg = new Image();
-    centerImg.src = '/frames/frame-center.webp';
+    centerImg.src = '/compressed-frames/frame-center.webp';
     centerImg.onload  = () => { this.centerImage = centerImg; checkDone(); };
     centerImg.onerror = () => { console.warn('Center frame failed to load'); checkDone(); };
 
     // Directional frames
     for (let i = 0; i < this.totalDirectionalFrames; i++) {
       const img = new Image();
-      img.src = `/frames/frame-${String(i).padStart(3, '0')}.webp`;
+      img.src = `/compressed-frames/frame-${String(i).padStart(3, '0')}.webp`;
       img.onload  = () => checkDone();
       img.onerror = () => { console.warn(`Frame ${i} failed`); checkDone(); };
       this.images.push(img);

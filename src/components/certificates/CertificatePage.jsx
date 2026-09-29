@@ -5,19 +5,19 @@ import "../../styles/global.css";
 const certificates = [
   {
     id: 1,
-    media: "/img/stellar.jpg",
+    media: "/compressed-img/stellar.webp",
     mediaType: "img",
     title: "Stellar Builder Challenge",
   },
   {
     id: 2,
-    media: "/img/java.jpg",
+    media: "/compressed-img/java.webp",
     mediaType: "img",
     title: "Java",
   },
   {
     id: 3,
-    media: "/img/udemy.png",
+    media: "/compressed-img/udemy.webp",
     mediaType: "img",
     title: "Fullstack Web Development Bootcamp",
   },
@@ -37,7 +37,7 @@ export default function CertificatePage() {
         playsInline
         aria-hidden="true"
       >
-        <source src="/videos/14114346_1920_1080_30fps.mp4" type="video/mp4" />
+        <source src="/compressed-videos/14114346_1920_1080_30fps.mp4" type="video/mp4" />
       </video>
 
       <h1 className="certificate-heading" ref={headingRef}>

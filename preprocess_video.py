@@ -7,7 +7,7 @@ from PIL import Image
 
 def preprocess():
     video_path = "public/character.mp4"
-    output_dir = "public/frames"
+    output_dir = "public/compressed-frames"
     os.makedirs(output_dir, exist_ok=True)
 
     cap = cv2.VideoCapture(video_path)

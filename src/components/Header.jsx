@@ -5,7 +5,7 @@ function Header() {
     <header>
       <div className="head-left">
         <img
-          src="/img/logo.png"
+          src="/compressed-img/logo.webp"
           alt="Logo"
           className="logo"
         />

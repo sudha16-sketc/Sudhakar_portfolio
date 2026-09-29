@@ -64,7 +64,7 @@ function About() {
       </div>
 
       <div ref={imageRef} className="image-box">
-        <img src="/img/about.webp" alt="Portrait of Sudhakar Sutar" decoding="async" />
+        <img src="/compressed-img/about.webp" alt="Portrait of Sudhakar Sutar" decoding="async" />
       </div>
 
       <h4>

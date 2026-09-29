@@ -16,36 +16,36 @@ function Projects() {
       title: "BuildVerse",
       description:
         "Gamified Web3 builder platform with wallet authentication, reputation system, community posts, bounty management and blockchain rewards.",
-      video: "/videos/blockVerse.mp4",
+      video: "/compressed-videos/blockVerse.mp4",
     },
     {
       title: "FinWise AI",
       description:
         "AI-powered financial advisor integrating Gemini AI and Stellar blockchain reward mechanisms for budgeting and savings.",
-      video: "/videos/finwise.mp4",
+      video: "/compressed-videos/finwise.mp4",
     },
     {
       title: "CodeCraft",
       description:
         "Gamified blockchain learning platform using Ethereum, Solidity, ERC-20 rewards and NFT achievement certificates.",
-      video: "/videos/codecarft.mp4",
+      video: "/compressed-videos/codecraft.mp4",
     },
     {
       title: "Shadow AI",
       description:
         "AI security assistant that prevents accidental sharing of credentials, API keys and confidential information with public AI tools.",
-      video: "/videos/shadow.mp4",
+      video: "/compressed-videos/shadow.mp4",
     },
     {
       title: "PlantCare AI",
       description:
         "AI-powered smart gardening assistant providing personalized plant care recommendations using Gemini AI and intelligent visual guides.",
-      video: "/videos/plantcare.mp4",
+      video: "/compressed-videos/plantcare.mp4",
     },
     {
       title: "See More",
       description: "Click here to see more of my projects.",
-      video: "/videos/hero-1.mp4",
+      video: "/compressed-videos/hero-1.mp4",
       isSeeMore: true,
     },
   ];

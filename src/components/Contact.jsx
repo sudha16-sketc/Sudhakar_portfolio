@@ -45,7 +45,7 @@ function Contact() {
       </div>
 
       <img
-        src="/img/contact-1.webp"
+        src="/compressed-img/contact-1.webp"
         alt=""
         aria-hidden="true"
         className="img1"
@@ -54,7 +54,7 @@ function Contact() {
       />
 
       <img
-        src="/img/contact-2.webp"
+        src="/compressed-img/contact-2.webp"
         alt=""
         aria-hidden="true"
         className="img2"
@@ -63,7 +63,7 @@ function Contact() {
       />
 
       <img
-        src="/img/swordman.webp"
+        src="/compressed-img/swordman.webp"
         alt=""
         aria-hidden="true"
         className="img3"

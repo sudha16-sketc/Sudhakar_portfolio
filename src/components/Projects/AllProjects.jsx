@@ -8,7 +8,7 @@ const projects = [
     title: "BuildVerse",
     description:
       "Gamified Web3 builder platform with wallet authentication, reputation system, community posts, bounty management and blockchain rewards.",
-    media: "/videos/blockVerse.mp4",
+    media: "/compressed-videos/blockVerse.mp4",
     mediaType: "video",
   },
   {
@@ -16,7 +16,7 @@ const projects = [
     title: "FinWise AI",
     description:
       "AI-powered financial advisor integrating Gemini AI and Stellar blockchain reward mechanisms for budgeting and savings.",
-    media: "/videos/finwise.mp4",
+    media: "/compressed-videos/finwise.mp4",
     mediaType: "video",
   },
   {
@@ -24,7 +24,7 @@ const projects = [
     title: "CodeCraft",
     description:
       "Gamified blockchain learning platform using Ethereum, Solidity, ERC-20 rewards and NFT achievement certificates.",
-    media: "/videos/codecarft.mp4",
+    media: "/compressed-videos/codecraft.mp4",
     mediaType: "video",
   },
   {
@@ -32,7 +32,7 @@ const projects = [
     title: "Shadow AI",
     description:
       "AI security assistant that prevents accidental sharing of credentials, API keys and confidential information with public AI tools.",
-    media: "/videos/shadow.mp4",
+    media: "/compressed-videos/shadow.mp4",
     mediaType: "video",
   },
   {
@@ -40,7 +40,7 @@ const projects = [
     title: "PlantCare AI",
     description:
       "AI-powered smart gardening assistant providing personalized plant care recommendations using Gemini AI and intelligent visual guides.",
-    media: "/videos/plantcare.mp4",
+    media: "/compressed-videos/plantcare.mp4",
     mediaType: "video",
   },
 ];
@@ -59,7 +59,7 @@ export default function AllProjects() {
         playsInline
         aria-hidden="true"
       >
-        <source src="/videos/14114346_1920_1080_30fps.mp4" type="video/mp4" />
+        <source src="/compressed-videos/14114346_1920_1080_30fps.mp4" type="video/mp4" />
       </video>
 
       <h1 className="certificate-heading" ref={headingRef}>

@@ -1317,7 +1317,7 @@ header:hover {
 
 /* Right decorative panel */
 .contact-right {
-  background-image: url("/img/signup2.png");
+  background-image: url("/compressed-img/signup2.webp");
   background-position: bottom;
   background-repeat: no-repeat;
   background-size: cover;
