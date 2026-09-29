@@ -14,26 +14,39 @@ export const CharacterTracker = ({ onLoaded }) => {
     if (!canvasRef.current || !containerRef.current) return;
 
     // Check accessibility & device capabilities
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isTouchOnly = window.matchMedia('(pointer: coarse)').matches;
+    const matchesMedia = (query) =>
+      typeof window.matchMedia === 'function' && window.matchMedia(query).matches;
+    const isLowMemory =
+      typeof navigator.deviceMemory === 'number' && navigator.deviceMemory <= 4;
+    const isDataSaver = navigator.connection?.saveData === true;
+    const staticMode =
+      matchesMedia('(prefers-reduced-motion: reduce)') ||
+      matchesMedia('(pointer: coarse)') ||
+      isLowMemory ||
+      isDataSaver;
 
-    // If reduced motion or touch device, we can initialize and display neutral frame
-    const engine = new CharacterTrackerEngine({
-      canvas: canvasRef.current,
-      container: containerRef.current,
-      totalDirectionalFrames: 164,
-      deadzoneRadiusRatio: 0.12,
-      lerpFactor: prefersReducedMotion || isTouchOnly ? 0 : 0.25,
-      onProgress: (p) => {
-        setLoadProgress(Math.round(p * 100));
-      },
-      onReady: () => {
-        setIsLoading(false);
-        if (onLoaded) {
-          onLoaded();
+    let engine;
+    try {
+      engine = new CharacterTrackerEngine({
+        canvas: canvasRef.current,
+        container: containerRef.current,
+        totalDirectionalFrames: 164,
+        deadzoneRadiusRatio: 0.12,
+        staticMode,
+        onProgress: (p) => {
+          setLoadProgress(Math.round(p * 100));
+        },
+        onReady: () => {
+          setIsLoading(false);
+          onLoaded?.();
         }
-      }
-    });
+      });
+    } catch (error) {
+      console.warn('Character animation is unavailable; showing the static hero.', error);
+      setIsLoading(false);
+      onLoaded?.();
+      return;
+    }
 
     engineRef.current = engine;
 

@@ -40,8 +40,14 @@ export class CharacterTrackerEngine {
     this.canvas = options.canvas;
     this.totalDirectionalFrames = options.totalDirectionalFrames ?? 164;
     this.lerpFactor = options.lerpFactor ?? 0.24;
+    this.staticMode = options.staticMode ?? false;
 
-    const ctx = this.canvas.getContext('2d', { alpha: false, desynchronized: true });
+    let ctx;
+    try {
+      ctx = this.canvas.getContext('2d', { alpha: false, desynchronized: true });
+    } catch {
+      ctx = this.canvas.getContext('2d');
+    }
     if (!ctx) throw new Error('Could not obtain 2D canvas context');
     this.ctx = ctx;
 
@@ -76,13 +82,14 @@ export class CharacterTrackerEngine {
     this.updateDimensions();
     this.preloadFrames(options.onProgress, options.onReady);
     this.bindEvents();
-    this.startLoop();
+    if (!this.staticMode) this.startLoop();
   }
 
   // ─── Frame loading ────────────────────────────────────────────────────────
 
   preloadFrames(onProgress, onReady) {
-    const totalToLoad = this.totalDirectionalFrames + 1;
+    const directionalFrameCount = this.staticMode ? 0 : this.totalDirectionalFrames;
+    const totalToLoad = directionalFrameCount + 1;
     let loadedCount = 0;
 
     const checkDone = () => {
@@ -102,7 +109,7 @@ export class CharacterTrackerEngine {
     centerImg.onerror = () => { console.warn('Center frame failed to load'); checkDone(); };
 
     // Directional frames
-    for (let i = 0; i < this.totalDirectionalFrames; i++) {
+    for (let i = 0; i < directionalFrameCount; i++) {
       const img = new Image();
       img.src = `/compressed-frames/frame-${String(i).padStart(3, '0')}.webp`;
       img.onload  = () => checkDone();
@@ -114,15 +121,20 @@ export class CharacterTrackerEngine {
   // ─── Events ──────────────────────────────────────────────────────────────
 
   bindEvents() {
-    window.addEventListener('mousemove', this.boundOnMouseMove, { passive: true });
     window.addEventListener('resize',    this.boundOnResize,    { passive: true });
-    document.addEventListener('mouseenter', this.boundOnMouseEnter);
-    document.addEventListener('mouseleave', this.boundOnMouseLeave);
+    if (!this.staticMode) {
+      window.addEventListener('mousemove', this.boundOnMouseMove, { passive: true });
+      document.addEventListener('mouseenter', this.boundOnMouseEnter);
+      document.addEventListener('mouseleave', this.boundOnMouseLeave);
+    }
   }
 
   updateDimensions() {
     const rect = this.canvas.getBoundingClientRect();
-    this.dpr = Math.min(window.devicePixelRatio ?? 1, 2);
+    const requestedDpr = Math.min(window.devicePixelRatio ?? 1, 1.5);
+    const maxPixels = 4_000_000;
+    const pixelScale = Math.sqrt(maxPixels / Math.max(rect.width * rect.height, 1));
+    this.dpr = Math.min(requestedDpr, pixelScale);
 
     this.canvasWidth  = rect.width;
     this.canvasHeight = rect.height;
@@ -223,6 +235,7 @@ export class CharacterTrackerEngine {
   // ─── Animation loop ───────────────────────────────────────────────────────
 
   startLoop() {
+    if (typeof requestAnimationFrame !== 'function') return;
     const tick = () => {
       if (this.isDestroyed) return;
       this.updateState();
@@ -273,6 +286,7 @@ export class CharacterTrackerEngine {
   renderSingleFrame(img) {
     const pw = this.canvas.width;
     const ph = this.canvas.height;
+    if (!img || !img.complete || img.naturalWidth === 0 || pw === 0 || ph === 0) return;
 
     const imgRatio    = img.naturalWidth / img.naturalHeight;
     const canvasRatio = pw / ph;
@@ -310,10 +324,12 @@ export class CharacterTrackerEngine {
       cancelAnimationFrame(this.rafId);
       this.rafId = null;
     }
-    window.removeEventListener('mousemove', this.boundOnMouseMove);
     window.removeEventListener('resize',    this.boundOnResize);
-    document.removeEventListener('mouseenter', this.boundOnMouseEnter);
-    document.removeEventListener('mouseleave', this.boundOnMouseLeave);
+    if (!this.staticMode) {
+      window.removeEventListener('mousemove', this.boundOnMouseMove);
+      document.removeEventListener('mouseenter', this.boundOnMouseEnter);
+      document.removeEventListener('mouseleave', this.boundOnMouseLeave);
+    }
     this.images = [];
     this.centerImage = null;
   }

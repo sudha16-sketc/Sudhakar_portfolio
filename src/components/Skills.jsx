@@ -1,9 +1,22 @@
 import "../styles/global.css";
-import { useEffect, useRef } from "react";
+import { Component, lazy, Suspense, useEffect, useRef, useState } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useGSAP } from "@gsap/react";
-import TechIcon from "../components/models/techlogos/TechIcon";
+
+const TechIcon = lazy(() => import("../components/models/techlogos/TechIcon"));
+
+class TechIconBoundary extends Component {
+  state = { failed: false };
+
+  static getDerivedStateFromError() {
+    return { failed: true };
+  }
+
+  render() {
+    return this.state.failed ? this.props.fallback : this.props.children;
+  }
+}
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,6 +24,8 @@ function Skills() {
   const titleRef = useRef(null);
   const cardsRef = useRef([]);
   const sectionRef = useRef(null);
+  const [showTechIcons, setShowTechIcons] = useState(false);
+  const [webGLAvailable, setWebGLAvailable] = useState(false);
 
   const skills = [
     {
@@ -19,6 +34,7 @@ function Skills() {
         modelPath: "/models/python_programming_language.glb",
         scale: 1,
         rotation: [0, 0, 0],
+        fallback: "PY",
       },
       items: ["JavaScript", "Solidity", "Python"],
     },
@@ -28,6 +44,7 @@ function Skills() {
         modelPath: "/models/react_logo.glb",
         scale: 1,
         rotation: [0, 0, 0],
+        fallback: "UI",
       },
       items: ["React", "HTML5", "CSS3", "Tailwind CSS", "GSAP"],
     },
@@ -37,6 +54,7 @@ function Skills() {
         modelPath: "/models/node.js_logo__3d_model.glb",
         scale: 50,
         rotation: [0, -Math.PI / 2, 0],
+        fallback: "API",
       },
       items: ["Node.js", "Express", "PostgreSQL"],
     },
@@ -46,10 +64,55 @@ function Skills() {
         modelPath: "/models/bitcoin.glb",
         scale: 0.9,
         rotation: [0, 0, 0],
+        fallback: "ETH",
       },
       items: ["Ethereum", "Solidity", "Hardhat", "Stellar"],
     },
   ];
+
+  useEffect(() => {
+    const target = sectionRef.current;
+    if (!target || typeof IntersectionObserver === "undefined") {
+      setShowTechIcons(true);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShowTechIcons(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "300px 0px" }
+    );
+    observer.observe(target);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    const mediaPrefersStatic =
+      typeof window.matchMedia === "function" &&
+      (window.matchMedia("(prefers-reduced-motion: reduce)").matches ||
+        window.matchMedia("(pointer: coarse)").matches);
+    const isLowMemory =
+      typeof navigator.deviceMemory === "number" && navigator.deviceMemory <= 4;
+    if (mediaPrefersStatic || isLowMemory || navigator.connection?.saveData) return;
+
+    const canvas = document.createElement("canvas");
+    try {
+      const context =
+        canvas.getContext("webgl2") ||
+        canvas.getContext("webgl") ||
+        canvas.getContext("experimental-webgl");
+      if (context) {
+        context.getExtension("WEBGL_lose_context")?.loseContext();
+        setWebGLAvailable(true);
+      }
+    } catch {
+      setWebGLAvailable(false);
+    }
+  }, []);
 
   useEffect(() => {
     const mm = gsap.matchMedia();
@@ -128,7 +191,29 @@ function Skills() {
             ref={(el) => (cardsRef.current[index] = el)}
           >
             <div className="tech-icon-wrapper">
-              <TechIcon model={skill.icon} />
+              {showTechIcons && webGLAvailable ? (
+                <TechIconBoundary
+                  fallback={
+                    <span className="tech-icon-fallback" aria-hidden="true">
+                      {skill.icon.fallback}
+                    </span>
+                  }
+                >
+                  <Suspense
+                    fallback={
+                      <span className="tech-icon-fallback" aria-hidden="true">
+                        {skill.icon.fallback}
+                      </span>
+                    }
+                  >
+                    <TechIcon model={skill.icon} />
+                  </Suspense>
+                </TechIconBoundary>
+              ) : (
+                <span className="tech-icon-fallback" aria-hidden="true">
+                  {skill.icon.fallback}
+                </span>
+              )}
             </div>
 
             <h3>{skill.title}</h3>

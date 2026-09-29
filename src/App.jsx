@@ -9,11 +9,12 @@ import Footer from "./components/Footer";
 import "./styles/global.css";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import ContactInput from "./components/ContactInput";
 import Certificate from "./components/certificates/Certificate"
-import CertificatePage from "./components/certificates/CertificatePage"
-import AllProjects from "./components/Projects/AllProjects";
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
+
+const ContactInput = lazy(() => import("./components/ContactInput"));
+const CertificatePage = lazy(() => import("./components/certificates/CertificatePage"));
+const AllProjects = lazy(() => import("./components/Projects/AllProjects"));
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -43,13 +44,15 @@ function Home() {
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/contactinput" element={<ContactInput />} />
-        <Route path="/certificatePage" element={<CertificatePage />} />
-        <Route path="/allprojects" element={<AllProjects />} />
-        <Route path="/projects" element={<Projects />} />
-      </Routes>
+      <Suspense fallback={null}>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/contactinput" element={<ContactInput />} />
+          <Route path="/certificatePage" element={<CertificatePage />} />
+          <Route path="/allprojects" element={<AllProjects />} />
+          <Route path="/projects" element={<Projects />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }
